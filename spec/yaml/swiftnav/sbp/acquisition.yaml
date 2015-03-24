@@ -10,12 +10,13 @@
 
 package: swiftnav.sbp.acquisition
 description: Satellite acquisition messages from the Piksi.
-stable: False
+public: True
 include:
   - types.yaml
 definitions:
 
  - MSG_ACQ_RESULT:
+    public: True
     id: 0x0015
     desc: |
       Results of an attempted GPS signal acquisition. Contains the
