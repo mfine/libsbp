@@ -1,5 +1,27 @@
 ((* extends "sbp_base.tex" *))
-
 ((* block messages_table *))
+((* for p in pkgs *))
 
+\subsection{(((p.identifier)))}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    Message & Name & Size & Description \\
+    \midrule
+    ((* for d in p.definitions *))
+    ((* if d.static *))
+    ((* if d.sbp_id *))
+
+    ((( p.identifier ))) & ((( d.identifier ))) $ 4 $ 10
+
+    ((*- endif *))
+    ((*- endif *))
+    ((*- endfor *))
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+((*- endfor *))
 ((* endblock *))
