@@ -1,4 +1,38 @@
 ((* extends "sbp_messages_table.tex" *))
 ((* block messages_desc *))
+((* for p in pkgs *))
+((* if p.render_source *))
+((*- for d in p.definitions *))
+((*- if d.static *))
+((*- if d.sbp_id *))
 
+\newpage
+\section{(((d.identifier|escape_tex))) ((('0x%04X'|format(d.sbp_id))))}
+\label{sec:(((d.identifier)))}
+
+(((d|desc|escape_tex)))
+
+\vspace{3em}
+\begin{table}[h]
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    Offset & Size & Format & Units & Name & Description \\
+    \midrule
+    ((* for f in d.fields *))
+    -1 & -2 & \texttt{(((f.type_id)))} & -3 & (((f.identifier|escape_tex))) & (((f|desc|escape_tex))) \\
+    ((* endfor *))
+    \midrule
+    & (((d|size))) \\
+    \bottomrule
+  \end{tabular}
+  \caption{(((d.identifier|escape_tex))) (((('0x%04X'|format(d.sbp_id))))) message structure}
+  \label{tab:(((d.identifier)))}
+\end{table}
+
+((*- endif *))
+((*- endif *))
+((*- endfor *))
+((*- endif *))
+((*- endfor *))
 ((* endblock *))

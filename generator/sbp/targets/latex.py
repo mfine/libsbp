@@ -36,9 +36,25 @@ def classnameify(s):
 def commentify(value):
   return '\n'.join([' * ' + l for l in value.split('\n')[:-1]])
 
+def packagenameify(s):
+  return ''.join(w if w in ACRONYMS else w.title() for w in s.split('.')[-1:])
+
+def size(d):
+  return -1
+
+def short_desc(d):
+  return d.short_desc if d.short_desc else ""
+
+def desc(d):
+  return d.desc if d.desc else ""
+
 JENV.filters['escape_tex'] = escape_tex
 JENV.filters['classnameify'] = classnameify
 JENV.filters['commentify'] = commentify
+JENV.filters['packagenameify'] = packagenameify
+JENV.filters['size'] = size
+JENV.filters['short_desc'] = short_desc
+JENV.filters['desc'] = desc
 
 def render_source(output_dir, package_specs):
   """
