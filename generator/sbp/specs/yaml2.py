@@ -119,7 +119,8 @@ def mk_package(contents):
                                   description=description,
                                   includes=include,
                                   definitions=resolved,
-                                  render_source=contents.get('render_source', True))
+                                  render_source=contents.get('render_source', True),
+                                  stable=contents.get('stable', True))
 def mk_definition(defn):
   assert len(defn) == 1
   identifier, contents = defn.items()[0]

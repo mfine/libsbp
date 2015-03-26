@@ -29,12 +29,13 @@ class PackageSpecification(object):
   """
 
   def __init__(self, identifier=None, description=None, includes=[],
-               definitions=[], render_source=True):
+               definitions=[], render_source=True, stable=False):
     self.identifier = identifier
     self.description = description
     self.includes = includes
     self.definitions = definitions
     self.render_source = render_source
+    self.stable = stable
     self.creation_timestamp = str(datetime.datetime.now())
 
   @property

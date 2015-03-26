@@ -1,31 +1,33 @@
 ((* extends "sbp_base.tex" *))
 ((* block messages_table *))
-((* for p in pkgs *))
-((* if p.render_source *))
-
-\newpage
-\subsection{(((p.identifier|packagenameify))) Message Types}
-\label{sec:(((p.identifier|packagenameify)))Messages}
 
 \begin{table}[h]
   \centering
-  \begin{tabular}{llll}
+  \begin{tabular}{lllll}
     \toprule
-    Message & Name & Size & Description \\
+    Package & Message & Name & Size & Description \\
     \midrule
+    ((* for p in pkgs *))
+    ((* if p.render_source *))
+    ((* if p.stable *))
     ((*- for d in p.definitions *))
     ((*- if d.static *))
     ((*- if d.sbp_id *))
-    \hyperref[sec:(((d.identifier)))]{\texttt{((('0x%04X'|format(d.sbp_id))))}} & \hyperref[sec:(((d.identifier)))]{\texttt{(((d.identifier|escape_tex)))}} & (((d|size))) & (((d|short_desc|escape_tex))) \\
+    ((*- if p.definitions.index(d) == 0 *))
+    (((p.identifier|packagenameify|escape_tex))) & \hyperref[sec:(((d.identifier)))]{\texttt{((('0x%04X'|format(d.sbp_id))))}} & \hyperref[sec:(((d.identifier)))]{\texttt{(((d.identifier|escape_tex)))}} & (((d|size))) & (((d|short_desc|escape_tex))) \\
+    ((*- else *))
+    & \hyperref[sec:(((d.identifier)))]{\texttt{((('0x%04X'|format(d.sbp_id))))}} & \hyperref[sec:(((d.identifier)))]{\texttt{(((d.identifier|escape_tex)))}} & (((d|size))) & (((d|short_desc|escape_tex))) \\        
+    ((*- endif *))
+    ((*- endif *))
+    ((*- endif *))
+    ((*- endfor *))
     ((*- endif *))
     ((*- endif *))
     ((*- endfor *))
     \bottomrule
   \end{tabular}
-  \caption{Summary of (((p.identifier|packagenameify))) message types}
-  \label{tab:(((p.identifier|packagenameify)))_messages__llh}
+  \caption{Summary of message types}
+  \label{tab:messages}
 \end{table}
 
-((*- endif *))
-((*- endfor *))
 ((* endblock *))
