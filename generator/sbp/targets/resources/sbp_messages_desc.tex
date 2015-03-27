@@ -1,17 +1,12 @@
 ((* extends "sbp_messages_table.tex" *))
 ((* block messages_desc *))
-((* for p in pkgs *))
-((* if p.render_source *))
-((* if p.stable *))
-((*- for d in p.definitions *))
-((*- if d.static *))
-((*- if d.sbp_id *))
+((*- for m in msgs *))
 
 \newpage
-\section{(((d.identifier|escape_tex))) ((('0x%04X'|format(d.sbp_id))))}
-\label{sec:(((d.identifier)))}
+\section{(((m.name|escape_tex))) ((('0x%04X'|format(m.sbp_id))))}
+\label{sec:(((m.name)))}
 
-(((d|desc|escape_tex)))
+(((m.desc|escape_tex)))
 
 \vspace{3em}
 \begin{table}[h]
@@ -20,21 +15,21 @@
     \toprule
     Offset & Size & Format & Units & Name & Description \\
     \midrule
-    ((* for f in d.fields *))
-    -1 & -2 & \texttt{(((f.type_id)))} & -3 & (((f.identifier|escape_tex))) & (((f|desc|escape_tex))) \\
-    ((* endfor *))
+    ((* for f in m.fields *))
+      (((f.offset))) &
+      (((f.size))) &
+      (((f.fmt))) &
+      (((f.units|escape_tex))) &
+      \texttt{(((f.name|escape_tex)))} &
+      (((f.desc|escape_tex))) \\
+      ((* endfor *))
     \midrule
-    & (((d|size))) \\
+    & (((m.size))) \\
     \bottomrule
   \end{tabular}
-  \caption{(((d.identifier|escape_tex))) (((('0x%04X'|format(d.sbp_id))))) message structure}
-  \label{tab:(((d.identifier)))}
+  \caption{(((m.name|escape_tex))) (((('0x%04X'|format(m.sbp_id))))) message structure}
+  \label{tab:(((m.name)))}
 \end{table}
 
-((*- endif *))
-((*- endif *))
-((*- endfor *))
-((*- endif *))
-((*- endif *))
 ((*- endfor *))
 ((* endblock *))

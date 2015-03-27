@@ -7,22 +7,12 @@
     \toprule
     Package & Message & Name & Size & Description \\
     \midrule
-    ((* for p in pkgs *))
-    ((* if p.render_source *))
-    ((* if p.stable *))
-    ((*- for d in p.definitions *))
-    ((*- if d.static *))
-    ((*- if d.sbp_id *))
-    ((*- if p.definitions.index(d) == 0 *))
-    (((p.identifier|packagenameify|escape_tex))) & \hyperref[sec:(((d.identifier)))]{\texttt{((('0x%04X'|format(d.sbp_id))))}} & \hyperref[sec:(((d.identifier)))]{\texttt{(((d.identifier|escape_tex)))}} & (((d|size))) & (((d|short_desc|escape_tex))) \\
-    ((*- else *))
-    & \hyperref[sec:(((d.identifier)))]{\texttt{((('0x%04X'|format(d.sbp_id))))}} & \hyperref[sec:(((d.identifier)))]{\texttt{(((d.identifier|escape_tex)))}} & (((d|size))) & (((d|short_desc|escape_tex))) \\        
-    ((*- endif *))
-    ((*- endif *))
-    ((*- endif *))
-    ((*- endfor *))
-    ((*- endif *))
-    ((*- endif *))
+    ((*- for m in msgs *))
+      (((m.pkg|packagenameify|escape_tex))) &
+      \hyperref[sec:(((m.name)))]{\texttt{((('0x%04X'|format(m.sbp_id))))}} &
+      \hyperref[sec:(((m.name)))]{\texttt{(((m.name|escape_tex)))}} &
+      (((m.size))) &
+      (((m.short_desc|escape_tex))) \\
     ((*- endfor *))
     \bottomrule
   \end{tabular}

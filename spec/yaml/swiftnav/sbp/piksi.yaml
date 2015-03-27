@@ -10,13 +10,13 @@
 
 package: swiftnav.sbp.piksi
 description: System messages from the Piksi.
-stable: False
+public: True
 include:
   - types.yaml
-  - lib.yaml
 definitions:
 
  - MSG_PRINT:
+    public: True
     id: 0x0010
     desc: Information and debugging information.
 
@@ -141,6 +141,7 @@ definitions:
             desc: Free stack space for this thread.
 
  - UARTChannel:
+    public: True
     desc: State of the UART channel.
     fields:
         - tx_throughput:
@@ -154,6 +155,9 @@ definitions:
         - crc_error_count:
             type: u16
             desc: UART CRC error count.
+        - io_error_count:
+            type: u16
+            desc: UART IO error count.
         - tx_buffer_level:
             type: u8
             units: Utilization % /255
@@ -163,19 +167,46 @@ definitions:
             units: Utilization % /255
             desc: UART receive usage percentage.
 
+ - Latency:
+    public: True
+    desc: |
+      Statistics on the latency of observations received from the base
+      station. As observation packets are received their GPS time is
+      compared to the current GPS time calculated locally by the
+      receiver to give a precise measurement of the end-to-end
+      communication latency in the system.
+    fields:
+        - avg:
+            type: s32
+            units: ms
+            desc: Average latency.
+        - lmin:
+            type: s32
+            units: ms
+            desc: Minimum latency.
+        - lmax:
+            type: s32
+            units: ms
+            desc: Maximum latency.
+        - current:
+            type: s32
+            units: ms
+            desc: Smoothed estimate of the current latency.
+
  - MSG_UART_STATE:
+    public: True
     id: 0x0018
     desc: State of the UART channels.
     fields:
-        - uarts0:
+        - uart_a:
             type: UARTChannel
-            desc: State of UART0.
-        - uarts1:
+            desc: State of UART A.
+        - uart_b:
             type: UARTChannel
-            desc: State of UART1.
-        - uarts2:
+            desc: State of UART B.
+        - uart_ftdi:
             type: UARTChannel
-            desc: State of UART2.
+            desc: State of UART FTDI.
         - latency:
             type: Latency
             desc: UART communication latency.

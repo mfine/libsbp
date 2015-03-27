@@ -10,16 +10,17 @@
 
 package: swiftnav.sbp.observation
 description: Observation messages from the Piksi.
-stable: False
+public: True
 include:
   - types.yaml
-  - lib.yaml
 definitions:
 
- - GPSTime:
+ - ObsGPSTime:
+    public: True
     desc: |
-      GPS time, defined as the number of milliseconds since the
-      beginning of the week on the Saturday/Sunday transition.
+      A wire-appropriate GPS time, defined as the number of
+      milliseconds since beginning of the week on the Saturday/Sunday
+      transition.
     fields:
         - tow:
             type: u32
@@ -30,11 +31,28 @@ definitions:
             units: week
             desc: GPS week number
 
+ - CarrierPhase:
+    public: True
+    desc: |
+      Carrier phase measurement in cycles represented as a 40-bit
+      fixed point number with Q32.8 layout, i.e. 32-bits of whole
+      cycles and 8-bits of fractional cycles.
+    fields:
+        - i:
+            type: s32
+            units: cycles
+            desc: Carrier phase whole cycles.
+        - f:
+            type: u8
+            units: cycles / 255
+            desc: Carrier phase fractional part.
+
  - ObservationHeader:
+    public: True
     desc: Header of a GPS observation message
     fields:
         - t:
-            type: GPSTime
+            type: ObsGPSTime
             desc: GPS time of this observation.
         - n_obs:
             type: u8
@@ -44,6 +62,7 @@ definitions:
               counter (ith packet of n)
 
  - PackedObsContent:
+    public: True
     desc: GPS observations for a particular satellite signal.
     fields:
         - P:
@@ -69,6 +88,7 @@ definitions:
             desc: PRN identifier of the satellite signal
 
  - MSG_OBS:
+    public: True
     id: 0x0045
     short_desc: MSG_OBS
     fields:
@@ -82,6 +102,7 @@ definitions:
             desc: Observations
 
  - MSG_BASE_POS:
+    public: True
     id: 0x0044
     short_desc: MSG_BASE_POS
     fields:

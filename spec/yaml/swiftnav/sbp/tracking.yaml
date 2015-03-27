@@ -10,13 +10,13 @@
 
 package: swiftnav.sbp.tracking
 description: Satellite tracking messages from the Piksi.
-stable: False
+public: True
 include:
   - types.yaml
-  - lib.yaml
 definitions:
 
  - TrackingChannelState:
+    public: True
     desc: State of the tracking channel.
     fields:
         - state:
@@ -39,6 +39,7 @@ definitions:
             desc: Carrier-to-noise density
 
  - MSG_TRACKING_STATE:
+    public: True
     id: 0x0016
     desc: Tracking channel states
     fields:
@@ -48,6 +49,7 @@ definitions:
           desc: State of the tracking channel.
 
  - MSG_EPHEMERIS:
+    public: True
     id: 0x001A
     short_desc: WGS84 satellite orbit ephemeris parameters
     desc: WGS84 satellite orbit ephemeris parameters
