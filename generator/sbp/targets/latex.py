@@ -134,22 +134,22 @@ def handle_fields(definitions, fields, prefix, offset):
     if f.type_id == "array":
       name = f.options['fill'].value
       definition = next(d for d in definitions if name == d.identifier)
-      prefix_name = '.'.join([prefix, name]) if prefix else name
+      prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
       (new_items, new_offset) = handle_fields(definitions, definition.fields, prefix_name + "[]", offset)
       items += new_items
       offset = new_offset
     elif f.type_id not in CONSTRUCT_CODE:
       name = f.type_id
       definition = next(d for d in definitions if name == d.identifier)
-      prefix_name = '.'.join([prefix, name]) if prefix else name
+      prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
       (new_items, new_offset) = handle_fields(definitions, definition.fields, prefix_name, offset)
       items += new_items
       offset = new_offset
     else:
       size = field_sizes[f.type_id]
       name = f.type_id
-      prefix_name = '.'.join([prefix, name]) if prefix else name
-      item = FieldItem(f.identifier, prefix_name, offset, size, f.units, f.desc)
+      prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
+      item = FieldItem(prefix_name, name, offset, size, f.units, f.desc)
       items.append(item)
       offset += size
   return (items, offset)
