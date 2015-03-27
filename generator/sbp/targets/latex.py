@@ -51,6 +51,9 @@ def short_desc(d):
 def desc(d):
   return d.desc if d.desc else ""
 
+def nobrackets(v):
+  return v.translate(None, '[]')
+
 JENV.filters['escape_tex'] = escape_tex
 JENV.filters['classnameify'] = classnameify
 JENV.filters['commentify'] = commentify
@@ -58,6 +61,7 @@ JENV.filters['packagenameify'] = packagenameify
 JENV.filters['size'] = size
 JENV.filters['short_desc'] = short_desc
 JENV.filters['desc'] = desc
+JENV.filters['nobrackets'] = nobrackets
 
 field_sizes = {
     'u8': 1,
@@ -72,37 +76,6 @@ field_sizes = {
     'double': 8,
 }
 
-class LatexMessage(object):
-  def __init__(self, pkg, name, sbp_id, short_desc, desc):
-    self.pkg = pkg
-    self.name = name
-    self.sbp_id = sbp_id
-    self.short_desc = short_desc
-    self.desc = desc
-    self.fields = []
-    self.size = 0
-    self.first = False
-
-  def __repr__(self):
-    return fmt_repr(self)
-
-
-class LatexField(object):
-  def __init__(self, name, offset, type, units, desc):
-    self.name = name
-    self.offset = offset
-    self.type = type
-    self.units = units
-    self.desc = desc
-    self.size = field_sizes.get(type, type)
-
-  def __repr__(self):
-    return fmt_repr(self)
-
-class LatexBitField(object):
-  def __init__():
-    pass
-
 CONSTRUCT_CODE = set(['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'float', 'double'])
 
 class TableItem:
@@ -116,43 +89,54 @@ class TableItem:
     self.fields = fields
 
 class FieldItem:
-  def __init__(self, name, fmt, offset, size, units, desc):
+  def __init__(self, name, fmt, offset, size, units, desc, n_with_values, bitfields):
     self.name = name
     self.fmt = fmt
     self.offset = offset
     self.size = size
     self.units = units
     self.desc = desc or ""
+    self.n_with_values = n_with_values
+    self.bitfields = bitfields
 
-class MessageItem:
-  def __init__(self):
-    pass
-
-def handle_fields(definitions, fields, prefix, offset):
+def handle_fields(definitions, fields, prefix, offset, multiplier):
   items = []
   for f in fields:
     if f.type_id == "array":
       name = f.options['fill'].value
       definition = next(d for d in definitions if name == d.identifier)
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
-      (new_items, new_offset) = handle_fields(definitions, definition.fields, prefix_name + "[]", offset)
-      items += new_items
-      offset = new_offset
+      (new_items, new_offset, new_multiplier) = handle_fields(definitions, definition.fields, prefix_name + "[*N*]", offset, multiplier)
+      multiplier = new_offset - offset
+      (newer_items, newer_offset, newer_multiplier) = handle_fields(definitions, definition.fields, prefix_name + "[N]", offset, multiplier)
+      items += newer_items
+      offset = newer_offset
     elif f.type_id not in CONSTRUCT_CODE:
       name = f.type_id
       definition = next(d for d in definitions if name == d.identifier)
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
-      (new_items, new_offset) = handle_fields(definitions, definition.fields, prefix_name, offset)
+      (new_items, new_offset, new_multiplier) = handle_fields(definitions, definition.fields, prefix_name, offset, multiplier)
       items += new_items
       offset = new_offset
+      multiplier = new_multiplier
     else:
       size = field_sizes[f.type_id]
       name = f.type_id
+      adj_offset = "%dN+%d" % (multiplier, offset) if multiplier else offset
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
-      item = FieldItem(prefix_name, name, offset, size, f.units, f.desc)
+      n_with_values = f.options['n_with_values'].value
+      bitfields = f.options['fields'].value if n_with_values > 0 else None
+      if bitfields:
+        for bf in bitfields:
+          print bf
+          print bf['desc']
+          if 'vals' in bf:
+            print bf['vals']
+
+      item = FieldItem(prefix_name, name, adj_offset, size, f.units, f.desc, n_with_values, bitfields)
       items.append(item)
       offset += size
-  return (items, offset)
+  return (items, offset, multiplier)
 
 def render_source(output_dir, package_specs):
   """
@@ -165,8 +149,9 @@ def render_source(output_dir, package_specs):
     pkg_name = p.identifier
     for d in p.definitions:
       if d.public and d.static and d.sbp_id:
-        items, size = handle_fields(p.definitions, d.fields, "", 0)
-        ti = TableItem(pkg_name, d.identifier, d.sbp_id, d.short_desc, d.desc, size, items)
+        items, size, multiplier = handle_fields(p.definitions, d.fields, "", 0, None)
+        adj_size = "%dN+%d" % (multiplier, size) if multiplier else size
+        ti = TableItem(pkg_name, d.identifier, d.sbp_id, d.short_desc, d.desc, adj_size, items)
         pkg_name = ""
         msgs.append(ti)
   with open(destination_filename, 'w') as f:
