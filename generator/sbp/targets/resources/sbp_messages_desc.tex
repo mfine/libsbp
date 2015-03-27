@@ -11,7 +11,7 @@
 \vspace{3em}
 \begin{table}[h]
   \centering
-  \begin{tabular}{llllll}
+  \begin{tabularx}{\textwidth}{ccaclX}
     \toprule
     Offset & Size & Format & Units & Name & Description \\
     \midrule
@@ -26,7 +26,7 @@
     \midrule
     & $(((m.size)))$ \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
   \caption{(((m.name|escape_tex))) (((('0x%04X'|format(m.sbp_id))))) message structure}
   \label{tab:(((m.name)))}
 \end{table}

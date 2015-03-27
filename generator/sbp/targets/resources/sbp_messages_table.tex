@@ -1,9 +1,15 @@
 ((* extends "sbp_base.tex" *))
 ((* block messages_table *))
 
+\newcolumntype{a}{>{\hsize=.2\hsize}X}
+\newcolumntype{b}{>{\hsize=.4\hsize}X}
+\newcolumntype{c}{>{\hsize=.3\hsize}X}
+\newcolumntype{d}{>{\hsize=.7\hsize}X}
+
+
 \begin{table}[h]
   \centering
-  \begin{tabular}{lllll}
+  \begin{tabularx}{\textwidth}{aabaX}
     \toprule
     Package & Message & Name & Size & Description \\
     \midrule
@@ -15,7 +21,7 @@
       (((m.short_desc|escape_tex))) \\
     ((*- endfor *))
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
   \caption{Summary of message types}
   \label{tab:messages}
 \end{table}
