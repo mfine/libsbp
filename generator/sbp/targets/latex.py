@@ -54,6 +54,10 @@ def desc(d):
 def nobrackets(v):
   return v.translate(None, '[]')
 
+def removearray(v):
+  import re
+  return re.sub('^[a-z]*\[N\]\.', '', v)
+
 JENV.filters['escape_tex'] = escape_tex
 JENV.filters['classnameify'] = classnameify
 JENV.filters['commentify'] = commentify
@@ -62,6 +66,7 @@ JENV.filters['size'] = size
 JENV.filters['short_desc'] = short_desc
 JENV.filters['desc'] = desc
 JENV.filters['nobrackets'] = nobrackets
+JENV.filters['removearray'] = removearray
 
 field_sizes = {
     'u8': 1,
@@ -126,13 +131,6 @@ def handle_fields(definitions, fields, prefix, offset, multiplier):
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
       n_with_values = f.options['n_with_values'].value
       bitfields = f.options['fields'].value if n_with_values > 0 else None
-      if bitfields:
-        for bf in bitfields:
-          print bf
-          print bf['desc']
-          if 'vals' in bf:
-            print bf['vals']
-
       item = FieldItem(prefix_name, name, adj_offset, size, f.units, f.desc, n_with_values, bitfields)
       items.append(item)
       offset += size
