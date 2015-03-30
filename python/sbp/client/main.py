@@ -73,7 +73,7 @@ def get_args():
                       help="Serialize SBP messages to bytes.")
   return parser.parse_args()
 
-def get_driver(use_ftdi, filename, port, baud):
+def get_driver(use_ftdi, port, baud, filename=None):
   """
   Get a driver based on configuration options
 
@@ -81,12 +81,12 @@ def get_driver(use_ftdi, filename, port, baud):
   ----------
   use_ftdi : bool
     For serial driver, use the pyftdi driver, otherwise use the pyserial driver.
-  filename : string
-    File to read SBP messages from.
   port : string
     Serial port to read.
   baud : int
     Serial port baud rate to set.
+  filename : string
+    File to read SBP messages from.
   """
   if filename:
     return FileDriver(filename)
@@ -146,11 +146,11 @@ def main():
   input_filename = args.input_filename[0]
   log_filename = args.log_filename[0]
   # Driver with context
-  with get_driver(use_ftdi, input_filename, port, baud) as driver:
-    # Logger with context
-    with get_logger(use_log, use_json, use_byte, log_filename) as logger:
-      # Handler with context
-      with Handler(driver.read, driver.write, verbose) as handler:
+  with get_driver(use_ftdi, port, baud, input_filename) as driver:
+    # Handler with context
+    with Handler(driver.read, driver.write, verbose) as handler:
+      # Logger with context
+      with get_logger(use_log, use_json, use_byte, log_filename) as logger:
         handler.add_callback(printer, SBP_MSG_PRINT)
         handler.add_callback(logger)
         handler.start()
