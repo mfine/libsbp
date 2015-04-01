@@ -17,10 +17,10 @@ Main executable.
 import argparse
 import os
 import pprint
-import sbp.specs.yaml2 as yaml
-import sbp.targets.python as py
-import sbp.targets.c as c
-import sbp.targets.latex as tex
+import sbpg.specs.yaml2 as yaml
+import sbpg.targets.python as py
+import sbpg.targets.c as c
+import sbpg.targets.latex as tex
 
 def get_args():
   parser = argparse.ArgumentParser(description='Swift Navigation SBP generator.')

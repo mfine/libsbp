@@ -13,10 +13,10 @@
 Parsing YAML specifications of SBP.
 """
 
-import sbp.syntax as sbp
 import glob
 import os
-import sbp.specs.yaml_schema as s
+import sbpg.specs.yaml_schema as s
+import sbpg.syntax as sbp
 import sys
 import yaml
 

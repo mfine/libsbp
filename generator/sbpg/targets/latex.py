@@ -11,8 +11,8 @@
 
 import re
 from operator import attrgetter
-from sbp.targets.templating import *
-from sbp.utils import fmt_repr
+from sbpg.targets.templating import *
+from sbpg.utils import fmt_repr
 
 TEMPLATE_NAME = "sbp_messages_desc.tex"
 
@@ -80,7 +80,8 @@ field_sizes = {
 
 CONSTRUCT_CODE = set(['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'float', 'double'])
 
-class TableItem:
+class TableItem(object):
+
   def __init__(self, pkg, name, sbp_id, short_desc, desc, size, fields):
     self.pkg = pkg
     self.name = name
@@ -90,7 +91,9 @@ class TableItem:
     self.size = size
     self.fields = fields
 
-class FieldItem:
+
+class FieldItem (object):
+
   def __init__(self, name, fmt, offset, size, units, desc, n_with_values, bitfields):
     self.name = name
     self.fmt = fmt
@@ -107,13 +110,26 @@ def handle_fields(definitions, fields, prefix, offset, multiplier):
   """
   items = []
   for f in fields:
-    if f.type_id == "array":
+    if f.type_id == "array" and f.options['fill'].value in CONSTRUCT_CODE:
       name = f.options['fill'].value
-      definition = next(d for d in definitions if name == d.identifier)
+      # size = field_sizes[f.type_id]
+      # name = f.type_id
+      # adj_offset = "%dN+%d" % (multiplier, offset) if multiplier else offset
+      # prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
+      # n_with_values = f.options['n_with_values'].value
+      # bitfields = f.options['fields'].value if n_with_values > 0 else None
+      # item = FieldItem(prefix_name, name, adj_offset, size, f.units, f.desc, n_with_values, bitfields)
+      # items.append(item)
+      # offset += size
+    elif f.type_id == "array":
+      name = f.options['fill'].value
+      definitions = next(d for d in definitions if name == d.identifier)
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
-      (new_items, new_offset, new_multiplier) = handle_fields(definitions, definition.fields, prefix_name + "[*N*]", offset, multiplier)
+      (new_items, new_offset, new_multiplier) \
+        = handle_fields(definitions, definition.fields, prefix_name + "[*N*]", offset, multiplier)
       multiplier = new_offset - offset
-      (newer_items, newer_offset, newer_multiplier) = handle_fields(definitions, definition.fields, prefix_name + "[N]", offset, multiplier)
+      (newer_items, newer_offset, newer_multiplier) \
+        = handle_fields(definitions, definition.fields, prefix_name + "[N]", offset, multiplier)
       items += newer_items
       offset = newer_offset
     elif f.type_id not in CONSTRUCT_CODE:
@@ -159,4 +175,3 @@ def render_source(output_dir, package_specs):
   os.chdir(output_dir)
   subprocess.call(["pdflatex", "sbp_out.tex"])
   subprocess.call(["mv", "sbp_out.pdf", "../docs/sbp.pdf"])
-
