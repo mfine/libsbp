@@ -62,8 +62,8 @@ definitions:
       buffer is empty; the Piksi returns the device DNA in a
       MSG_NAP_DEVICE_DNA message.
     fields:
-      dna:
-        type: array
-        fill: u8
-        size: 8
-        desc: 57-bit SwiftNAP FPGA Device DNA
+      - dna:
+          type: array
+          fill: u8
+          size: 8
+          desc: 57-bit SwiftNAP FPGA Device DNA
