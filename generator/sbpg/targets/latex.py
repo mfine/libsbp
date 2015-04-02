@@ -111,25 +111,24 @@ def handle_fields(definitions, fields, prefix, offset, multiplier):
   items = []
   for f in fields:
     if f.type_id == "array" and f.options['fill'].value in CONSTRUCT_CODE:
-      name = f.options['fill'].value
-      # size = field_sizes[f.type_id]
-      # name = f.type_id
-      # adj_offset = "%dN+%d" % (multiplier, offset) if multiplier else offset
-      # prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
-      # n_with_values = f.options['n_with_values'].value
-      # bitfields = f.options['fields'].value if n_with_values > 0 else None
-      # item = FieldItem(prefix_name, name, adj_offset, size, f.units, f.desc, n_with_values, bitfields)
-      # items.append(item)
-      # offset += size
+      prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
+      n_with_values = f.options['n_with_values'].value
+      bitfields = f.options['fields'].value if n_with_values > 0 else None
+      if 'size' in f.options:
+        name = "%s[%s]" % (f.options['fill'].value, str(f.options['size'].value))
+        size = field_sizes[f.options['fill'].value] * f.options['size'].value
+        item = FieldItem(prefix_name, name, offset, size, str(f.units), f.desc, n_with_values, bitfields)
+        items.append(item)
+        offset += size
     elif f.type_id == "array":
       name = f.options['fill'].value
-      definitions = next(d for d in definitions if name == d.identifier)
+      definition = next(d for d in definitions if name == d.identifier)
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
       (new_items, new_offset, new_multiplier) \
         = handle_fields(definitions, definition.fields, prefix_name + "[*N*]", offset, multiplier)
       multiplier = new_offset - offset
       (newer_items, newer_offset, newer_multiplier) \
-        = handle_fields(definitions, definition.fields, prefix_name + "[N]", offset, multiplier)
+        = handle_fields(definitions, definition.fields, prefix_name + "[*N*]", offset, multiplier)
       items += newer_items
       offset = newer_offset
     elif f.type_id not in CONSTRUCT_CODE:
@@ -147,7 +146,7 @@ def handle_fields(definitions, fields, prefix, offset, multiplier):
       prefix_name = '.'.join([prefix, f.identifier]) if prefix else f.identifier
       n_with_values = f.options['n_with_values'].value
       bitfields = f.options['fields'].value if n_with_values > 0 else None
-      item = FieldItem(prefix_name, name, adj_offset, size, f.units, f.desc, n_with_values, bitfields)
+      item = FieldItem(prefix_name, name, adj_offset, size, str(f.units), f.desc, n_with_values, bitfields)
       items.append(item)
       offset += size
   return (items, offset, multiplier)

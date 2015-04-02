@@ -27,7 +27,7 @@ definitions:
 
  - MSG_FILEIO_READ:
     id: 0x00A8
-    public: True
+    public: False
     short_desc: Read file from the file system (Host <=> Piksi).
     desc: |
       The file read message reads a certain length (up to 255 bytes)
@@ -52,7 +52,7 @@ definitions:
 
  - MSG_FILEIO_READ_DIR:
     id: 0x00A9
-    public: True
+    public: False
     short_desc: List files in a directory (Host <=> Piksi).
     desc: |
       The read directory message lists the files in a directory on the
@@ -76,7 +76,7 @@ definitions:
 
  - MSG_FILEIO_REMOVE:
     id: 0x00AC
-    public: True
+    public: False
     short_desc: Delete a file from the file system (Host => Piksi).
     desc: |
       The file remove message deletes a file from the file system. If
@@ -90,7 +90,7 @@ definitions:
 
  - MSG_FILEIO_WRITE:
     id: 0x00AD
-    public: True
+    public: False
     short_desc: Write to file (Host <=> Piksi)
     desc: |
       The file write message writes a certain length (up to 255 bytes)

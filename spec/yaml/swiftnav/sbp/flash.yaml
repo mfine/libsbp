@@ -21,7 +21,7 @@ definitions:
 
  - MSG_FLASH_PROGRAM:
     id: 0x00E0
-    public: True
+    public: False
     short_desc: Program addresses of the STM or M25 flash (Host => Piksi).
     desc: |
       The flash program message programs a set of addresses of either
@@ -181,7 +181,7 @@ definitions:
 
  - MSG_STM_UNIQUE_ID:
     id: 0x00E5
-    public: True
+    public: False
     short_desc: |
       Read STM32F4's hardcoded unique ID (Host <=> Piksi).
     desc: |

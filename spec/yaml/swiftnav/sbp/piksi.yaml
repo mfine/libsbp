@@ -92,7 +92,7 @@ definitions:
 
  - MSG_THREAD_STATE:
     id: 0x0017
-    public: True
+    public: False
     short_desc: State of a CPU/RTOS thread.
     desc: |
       The thread usage message from the Piksi reports RTOS thread
