@@ -26,6 +26,10 @@
 #include "common.h"
 #include "gnss.h"
 
+#ifdef _MSC_VER
+#pragma pack(1)
+#endif
+
 
 /** Navigation DataBase Event
  *
@@ -33,7 +37,11 @@
  * message could also be sent out when fetching an object from NDB.
  */
 #define SBP_MSG_NDB_EVENT 0x0400
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u64 recv_time;          /**< HW time in milliseconds. [ms] */
   u8 event;              /**< Event type. */
   u8 object_type;        /**< Event object type. */
@@ -57,5 +65,9 @@ of other data_source.
 
 
 /** \} */
+
+#ifdef _MSC_VER
+#pragma pack()
+#endif
 
 #endif /* LIBSBP_NDB_MESSAGES_H */

@@ -26,6 +26,10 @@
 #include "common.h"
 #include "gnss.h"
 
+#ifdef _MSC_VER
+#pragma pack(1)
+#endif
+
 
 /** Detailed signal tracking channel states
  *
@@ -33,7 +37,11 @@
  * single tracking channel useful for debugging issues.
  */
 #define SBP_MSG_TRACKING_STATE_DETAILED 0x0011
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u64 recv_time;       /**< Receiver clock time. [ns] */
   sbp_gps_time_t tot;             /**< Time of transmission of signal from satellite. TOW only valid when
 TOW status is decoded or propagated. WN only valid when week
@@ -78,7 +86,11 @@ signal is in continuous track.
  * Tracking channel state for a specific satellite signal and
  * measured signal power.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   gnss_signal16_t sid;    /**< GNSS signal being tracked */
   u8 fcn;    /**< Frequency channel number (GLONASS only) */
   u8 cn0;    /**< Carrier-to-Noise density.  Zero implies invalid cn0. [dB Hz / 4] */
@@ -92,7 +104,11 @@ typedef struct __attribute__((packed)) {
  * measurements for all tracked satellites.
  */
 #define SBP_MSG_TRACKING_STATE          0x0041
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   tracking_channel_state_t states[0]; /**< Signal tracking channel state */
 } msg_tracking_state_t;
 
@@ -101,7 +117,11 @@ typedef struct __attribute__((packed)) {
  *
  * Structure containing in-phase and quadrature correlation components.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   s32 I;    /**< In-phase correlation */
   s32 Q;    /**< Quadrature correlation */
 } tracking_channel_correlation_t;
@@ -113,7 +133,11 @@ typedef struct __attribute__((packed)) {
  * update interval.
  */
 #define SBP_MSG_TRACKING_IQ             0x001C
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u8 channel;    /**< Tracking channel of origin */
   sbp_gnss_signal_t sid;        /**< GNSS signal identifier */
   tracking_channel_correlation_t corrs[3];   /**< Early, Prompt and Late correlations */
@@ -124,7 +148,11 @@ typedef struct __attribute__((packed)) {
  *
 * Deprecated.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u8 state;    /**< Status of tracking channel */
   u8 prn;      /**< PRN-1 being tracked */
   float cn0;      /**< Carrier-to-noise density [dB Hz] */
@@ -136,7 +164,11 @@ typedef struct __attribute__((packed)) {
 * Deprecated.
  */
 #define SBP_MSG_TRACKING_STATE_DEP_A    0x0016
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   tracking_channel_state_dep_a_t states[0]; /**< Satellite tracking channel state */
 } msg_tracking_state_dep_a_t;
 
@@ -145,7 +177,11 @@ typedef struct __attribute__((packed)) {
  *
 * Deprecated.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u8 state;    /**< Status of tracking channel */
   sbp_gnss_signal_t sid;      /**< GNSS signal being tracked */
   float cn0;      /**< Carrier-to-noise density [dB Hz] */
@@ -157,11 +193,19 @@ typedef struct __attribute__((packed)) {
 * Deprecated.
  */
 #define SBP_MSG_TRACKING_STATE_DEP_B    0x0013
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   tracking_channel_state_dep_b_t states[0]; /**< Signal tracking channel state */
 } msg_tracking_state_dep_b_t;
 
 
 /** \} */
+
+#ifdef _MSC_VER
+#pragma pack()
+#endif
 
 #endif /* LIBSBP_TRACKING_MESSAGES_H */

@@ -25,12 +25,20 @@
 
 #include "common.h"
 
+#ifdef _MSC_VER
+#pragma pack(1)
+#endif
+
 
 /** Represents all the relevant information about the signal
  *
  * Signal identifier containing constellation, band, and satellite identifier
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u8 sat;     /**< Constellation-specific satellite identifier */
   u8 code;    /**< Signal constellation, band and code */
 } gnss_signal16_t;
@@ -40,7 +48,11 @@ typedef struct __attribute__((packed)) {
  *
  * Signal identifier containing constellation, band, and satellite identifier
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u16 sat;         /**< Constellation-specific satellite identifier.
 
 Note: unlike GnssSignal16, GPS satellites are encoded as
@@ -57,7 +69,11 @@ Note: unlike GnssSignal16, GPS satellites are encoded as
  * milliseconds since beginning of the week on the Saturday/Sunday
  * transition.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u32 tow;    /**< Milliseconds since start of GPS week [ms] */
   u16 wn;     /**< GPS week number [week] */
 } sbp_gps_time_t;
@@ -69,7 +85,11 @@ typedef struct __attribute__((packed)) {
  * seconds since beginning of the week on the Saturday/Sunday
  * transition.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u32 tow;    /**< Seconds since start of GPS week [s] */
   u16 wn;     /**< GPS week number [week] */
 } gps_time_sec_t;
@@ -82,7 +102,11 @@ typedef struct __attribute__((packed)) {
  * transition. In most cases, observations are epoch aligned
  * so ns field will be 0.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u32 tow;            /**< Milliseconds since start of GPS week [ms] */
   s32 ns_residual;    /**< Nanosecond residual of millisecond-rounded TOW (ranges
 from -500000 to 500000)
@@ -98,12 +122,20 @@ from -500000 to 500000)
  * cycles and 8-bits of fractional cycles. This phase has the
  * same sign as the pseudorange.
  */
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   s32 i;    /**< Carrier phase whole cycles [cycles] */
   u8 f;    /**< Carrier phase fractional part [cycles / 256] */
 } carrier_phase_t;
 
 
 /** \} */
+
+#ifdef _MSC_VER
+#pragma pack()
+#endif
 
 #endif /* LIBSBP_GNSS_MESSAGES_H */

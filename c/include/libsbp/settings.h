@@ -31,6 +31,10 @@
 
 #include "common.h"
 
+#ifdef _MSC_VER
+#pragma pack(1)
+#endif
+
 
 /** Save settings to flash (host => device)
  *
@@ -45,7 +49,11 @@
 * The setting message writes the device configuration.
  */
 #define SBP_MSG_SETTINGS_WRITE              0x00A0
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   char setting[0]; /**< A NULL-terminated and delimited string with contents
 [SECTION_SETTING, SETTING, VALUE]. A device will only
 process to this message when it is received from sender ID
@@ -59,7 +67,11 @@ process to this message when it is received from sender ID
 * The setting message reads the device configuration.
  */
 #define SBP_MSG_SETTINGS_READ_REQ           0x00A4
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   char setting[0]; /**< A NULL-terminated and delimited string with contents
 [SECTION_SETTING, SETTING]. A device will only respond to
 this message when it is received from sender ID 0x42.
@@ -72,7 +84,11 @@ this message when it is received from sender ID 0x42.
 * The setting message reads the device configuration.
  */
 #define SBP_MSG_SETTINGS_READ_RESP          0x00A5
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   char setting[0]; /**< A NULL-terminated and delimited string with contents
 [SECTION_SETTING, SETTING, VALUE].
  */
@@ -88,7 +104,11 @@ typedef struct __attribute__((packed)) {
  * this message when it is received from sender ID 0x42.
  */
 #define SBP_MSG_SETTINGS_READ_BY_INDEX_REQ  0x00A2
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u16 index;    /**< An index into the device settings, with values ranging from
 0 to length(settings)
  */
@@ -103,7 +123,11 @@ typedef struct __attribute__((packed)) {
  * [SECTION_SETTING, SETTING, VALUE].
  */
 #define SBP_MSG_SETTINGS_READ_BY_INDEX_RESP 0x00A7
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   u16 index;      /**< An index into the device settings, with values ranging from
 0 to length(settings)
  */
@@ -127,7 +151,11 @@ typedef struct __attribute__((packed)) {
  * for this setting to set the initial value.
  */
 #define SBP_MSG_SETTINGS_REGISTER           0x00AE
+#ifdef _MSC_VER
+typedef struct {
+#else
 typedef struct __attribute__((packed)) {
+#endif
   char setting[0]; /**< A NULL-terminated and delimited string with contents
 [SECTION_SETTING, SETTING, VALUE].
  */
@@ -135,5 +163,9 @@ typedef struct __attribute__((packed)) {
 
 
 /** \} */
+
+#ifdef _MSC_VER
+#pragma pack()
+#endif
 
 #endif /* LIBSBP_SETTINGS_MESSAGES_H */
